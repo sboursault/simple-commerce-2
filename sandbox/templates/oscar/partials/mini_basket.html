@@ -1,0 +1,19 @@
+{% load currency_filters %}
+{% load i18n %}
+
+
+<li class="basket-mini nav-item dropdown">
+
+      <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
+          <i class="fa-solid fa-basket-shopping mr-2"></i>
+          {% trans "Basket" %}
+          {% if request.basket.num_items > 0 %}
+              ({{ request.basket.num_items }})
+          {% endif %}
+      </a>
+      <div class="{% block mini_basket_dropdown_classes %}dropdown-menu dropdown-menu-right{% endblock %}">
+
+        {% include "oscar/basket/partials/basket_quick.html" %}
+
+      </div>
+</li>

@@ -1,0 +1,65 @@
+{% extends 'oscar/layout.html' %}
+
+{% block layout %}
+    {# Top-horizontal bar with account, notifictions, dashboard links #}
+
+    {# Site logo/title, mini-basket, browse dropdown and searchbox #}
+    <header class="header container">
+        <div class="page_inner pt-4 pb-3 bg-light">
+            <div class="row justify-content-between">
+                <div class="col-sm-6">
+                    {% include "oscar/partials/brand.html" %}
+                </div>
+                <div class="col-sm-6">
+                    <nav id="top_page" class="navbar navbar-expand-lg navbar-light bg-light accounts">
+                        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".account-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                        <div class="container">
+
+                            <div class="navbar-collapse account-collapse collapse">
+
+                                <ul class="navbar-nav ml-md-auto d-md-flex mr-2">
+                                    {% include "oscar/partials/nav_accounts_dropdown.html" %}
+                                </ul>
+
+                                <ul class="navbar-nav d-md-flex mx-2">
+                                    {# Mini-basket wrapped in a block so some templates can now display it #}
+                                    {% block mini_basket %}{% include "oscar/partials/mini_basket.html" %}{% endblock %}
+                                </ul>
+
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        {% block navigation %}
+            {% include "oscar/partials/nav_primary.html" %}
+        {% endblock %}
+    </header>
+
+    {# Main content of page - other layout templates may override this block #}
+    {% block content_wrapper %}
+        <div class="container page">
+            <div class="page_inner">
+                {% block breadcrumbs %}{% endblock %}
+                {% block header %}
+                    <div class="page-header">
+                        <h1>{% block headertext %}{% endblock %}</h1>
+                    </div>
+                {% endblock %}
+                {% include "oscar/partials/alert_messages.html" %}
+                {% block subnavigation %}{% endblock %}
+                <div class="content">
+                    {% block subheader %}{% endblock subheader %}
+
+                    {# Div exists for AJAX updates to entire content section #}
+                    <div id="content_inner">{% block content %}{% endblock %}</div>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% include "oscar/partials/footer.html" %}
+{% endblock %}
