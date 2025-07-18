@@ -10,6 +10,7 @@ from oscar.core.loading import get_classes
     NoShippingRequired,
     TaxExclusiveOfferDiscount,
     TaxInclusiveOfferDiscount,
+    FixedPrice,
 ) = get_classes(
     "shipping.methods",
     [
@@ -17,6 +18,7 @@ from oscar.core.loading import get_classes
         "NoShippingRequired",
         "TaxExclusiveOfferDiscount",
         "TaxInclusiveOfferDiscount",
+        "FixedPrice",
     ],
 )
 
@@ -30,7 +32,7 @@ class Repository(object):
     # We default to just free shipping. Customise this class and override this
     # property to add your own shipping methods. This should be a list of
     # instantiated shipping methods.
-    methods = (Free(),)
+    methods = (FixedPrice(7, 7),)
 
     # API
 

@@ -25,7 +25,9 @@ urlpatterns = [
         {'sitemaps': base_sitemaps}),
     path('sitemap-<slug:section>.xml', views.sitemap,
         {'sitemaps': base_sitemaps},
-        name='django.contrib.sitemaps.views.sitemap')
+        name='django.contrib.sitemaps.views.sitemap'),
+    # oscar api
+    path("api/", include("oscarapi.urls")),
 ]
 
 # Prefix Oscar URLs with language codes

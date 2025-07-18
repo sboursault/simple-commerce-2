@@ -10,7 +10,9 @@ location = lambda x: os.path.join(
 
 DEBUG = env.bool('DEBUG', default=True)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+# ALLOWED_HOSTS = ['*'] is not safe but required for docker
+# (https://docs.djangoproject.com/en/4.1/ref/settings/#allowed-hosts)
+ALLOWED_HOSTS = ['*']
 
 EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -45,33 +47,17 @@ TEST_RUNNER = 'django.test.runner.DiscoverRunner'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-gb'
+if os.environ.get('DEFAULT_LANGUAGE', '').lower() == 'fr':
+    LANGUAGE_CODE = 'fr'
+else:
+    LANGUAGE_CODE = 'en-gb'
 
 # Includes all languages that have >50% coverage in Transifex
 # Taken from Django's default setting for LANGUAGES
 gettext_noop = lambda s: s
 LANGUAGES = (
-    ('ar', gettext_noop('Arabic')),
-    ('ca', gettext_noop('Catalan')),
-    ('cs', gettext_noop('Czech')),
-    ('da', gettext_noop('Danish')),
-    ('de', gettext_noop('German')),
     ('en-gb', gettext_noop('British English')),
-    ('el', gettext_noop('Greek')),
-    ('es', gettext_noop('Spanish')),
-    ('fi', gettext_noop('Finnish')),
     ('fr', gettext_noop('French')),
-    ('it', gettext_noop('Italian')),
-    ('ko', gettext_noop('Korean')),
-    ('nl', gettext_noop('Dutch')),
-    ('pl', gettext_noop('Polish')),
-    ('pt', gettext_noop('Portuguese')),
-    ('pt-br', gettext_noop('Brazilian Portuguese')),
-    ('ro', gettext_noop('Romanian')),
-    ('ru', gettext_noop('Russian')),
-    ('sk', gettext_noop('Slovak')),
-    ('uk', gettext_noop('Ukrainian')),
-    ('zh-cn', gettext_noop('Simplified Chinese')),
 )
 
 SITE_ID = 1
@@ -150,12 +136,22 @@ TEMPLATES = [
     }
 ]
 
+
+
+
+
+if os.environ.get('CSRF_ENABLED', '').lower() == 'false':
+    print('Warning: Csrf protection is disabled')
+    csrf_middleware = 'oscar.apps.simplecommerce.middle.DisableCSRFMiddleware'
+else:
+    csrf_middleware = 'django.middleware.csrf.CsrfViewMiddleware'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    csrf_middleware,
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -168,6 +164,9 @@ MIDDLEWARE = [
 
     # Ensure a valid basket is added to the request instance for every request
     'oscar.apps.basket.middleware.BasketMiddleware',
+
+    # Protect the usage of your API with an authentication token
+    # 'oscarapi.middleware.ApiGatewayMiddleWare',
 ]
 
 ROOT_URLCONF = 'urls'
@@ -306,6 +305,11 @@ INSTALLED_APPS = [
 
     # Django apps that the sandbox depends on
     'django.contrib.sitemaps',
+
+    # extra dependencies
+    'rest_framework',
+    'oscarapi',
+    'oscar.apps.simplecommerce',
 ]
 
 # Add Oscar's custom auth backend so users can sign in using their email
@@ -329,6 +333,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LOGIN_REDIRECT_URL = '/'
 APPEND_SLASH = True
+
+# Oscar api
+OSCARAPI_EXPOSE_USER_DETAILS = True
+OSCARAPI_BLOCK_ADMIN_API_ACCESS = False
+OSCARAPI_ENABLE_REGISTRATION = True
 
 # ====================
 # Messages contrib app
@@ -364,7 +373,8 @@ HAYSTACK_CONNECTIONS = {
 # Debug Toolbar
 # =============
 
-INTERNAL_IPS = ['127.0.0.1', '::1']
+#INTERNAL_IPS = ['127.0.0.1', '::1']
+INTERNAL_IPS = []  # empty list -> Django Debug Toolbar is disabled
 
 # ==============
 # Oscar settings
@@ -380,6 +390,8 @@ OSCAR_SHOP_TAGLINE = 'Sandbox'
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
 
+OSCAR_SHOP_NAME = 'Simple commerce'
+OSCAR_DEFAULT_CURRENCY = 'EUR'
 
 # Order processing
 # ================
