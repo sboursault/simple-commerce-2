@@ -1,0 +1,46 @@
+{% extends "oscar/layout.html" %}
+{% load i18n %}
+
+{% block title %}
+    {% trans 'Login or register' %} | {{ block.super }}
+{% endblock %}
+
+{% block breadcrumbs %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{{ homepage_url }}">{% trans 'Home' %}</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans 'Login or register' %}</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        {% if login_form %}
+            <div class="col-12 col-sm-10 col-md-6 col-lg-4 login_form">
+                <form id="login_form" action="{{ request.get_full_path }}" method="post" class="card card-body bg-light" >
+                    <h2>{% trans 'Log In' %}</h2>
+                    {% csrf_token %}
+                    {% include "oscar/partials/form_fields.html" with form=login_form %}
+                    <p class="form-group h6 mt-n2 small"><a href="{% url 'password-reset' %}">{% trans "I've forgotten my password" %}</a></p>
+                    <button name="login_submit" type="submit" value="Log In" class="form-group btn btn-lg btn-primary" data-loading-text="{% trans "Logging in..." %}">{% trans 'Log In' %}</button>
+                    <p class="text-center mb-0">{% trans "or"|capfirst %} <a href="{{ request.path }}?register">{% trans "Register" %}</a></p>
+                </form>
+            </div>
+        {% else %}
+            <div class="col-12 col-sm-10 col-md-6 col-lg-4 register_form">
+                <form id="register_form" action="{{ request.get_full_path }}" method="post" class="card card-body bg-light">
+                    <h2>{% trans 'Register' %}</h2>
+                    {% csrf_token %}
+                    {% include "oscar/partials/form_fields.html" with form=registration_form %}
+                    <button name="registration_submit" type="submit" value="Register" class="form-group btn btn-lg btn-primary" data-loading-text="{% trans 'Registering...' %}">{% trans 'Register' %}</button>
+                    <p class="text-center mb-0"><a href="{{ request.path }}">{% trans "Log In" %}</a></p>
+                </form>
+            </div>
+        {% endif %}
+    </div>
+{% endblock content %}

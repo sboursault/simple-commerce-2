@@ -107,15 +107,11 @@ class AccountAuthView(RegisterUserMixin, generic.TemplateView):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect(settings.LOGIN_REDIRECT_URL)
-        return super().get(request, *args, **kwargs)
-
-    def get_context_data(self, *args, **kwargs):
-        ctx = super().get_context_data(*args, **kwargs)
-        if "login_form" not in kwargs:
-            ctx["login_form"] = self.get_login_form()
-        if "registration_form" not in kwargs:
-            ctx["registration_form"] = self.get_registration_form()
-        return ctx
+        if "register" in request.GET:
+            context = self.get_context_data(registration_form=self.get_registration_form())
+        else:
+            context = self.get_context_data(login_form=self.get_login_form())
+        return self.render_to_response(context)
 
     def post(self, request, *args, **kwargs):
         # Use the name of the submit button to determine which form to validate
