@@ -338,6 +338,7 @@ APPEND_SLASH = True
 OSCARAPI_EXPOSE_USER_DETAILS = True
 OSCARAPI_BLOCK_ADMIN_API_ACCESS = False
 OSCARAPI_ENABLE_REGISTRATION = True
+OSCARAPI_OVERRIDE_MODULES = ['apps.api']
 
 # ====================
 # Messages contrib app
@@ -385,13 +386,11 @@ from oscar.defaults import *
 # Meta
 # ====
 
-OSCAR_SHOP_TAGLINE = 'Sandbox'
-
+OSCAR_SHOP_NAME = 'Simple commerce'
+OSCAR_SHOP_TAGLINE = ''
+OSCAR_DEFAULT_CURRENCY = 'EUR'
 OSCAR_RECENTLY_VIEWED_PRODUCTS = 20
 OSCAR_ALLOW_ANON_CHECKOUT = True
-
-OSCAR_SHOP_NAME = 'Simple commerce'
-OSCAR_DEFAULT_CURRENCY = 'EUR'
 
 # Order processing
 # ================
