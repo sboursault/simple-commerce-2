@@ -15,17 +15,17 @@ postgresql must be installed on the machine
 
 ### Using the docker image
 
-	docker run -p 8000:8000 \
+	docker run -p 8080:8080 \
         -e CSRF_ENABLED='true' \
         -e DEFAULT_LANGUAGE='fr' \
-        sboursault/simple-commerce:1.5
+        sboursault/simple-commerce:2.0
 
 ### Build and push the docker image
 
-    docker build -t sboursault/simple-commerce:1.5 --rm=true --no-cache=true .
-    docker push sboursault/simple-commerce:1.5
+    docker build -t sboursault/simple-commerce:2.0 --rm=true --no-cache=true .
+    docker push sboursault/simple-commerce:2.0
 
-Now the image url is 'docker.io/sboursault/simple-commerce:1.5'.
+Now the image url is 'docker.io/sboursault/simple-commerce:2.0'.
     
 ### Admin user
 
