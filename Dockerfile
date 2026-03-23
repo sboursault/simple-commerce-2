@@ -11,6 +11,9 @@ RUN make install
 USER django
 RUN make build_sandbox
 RUN cp --remove-destination /app/src/oscar/static/oscar/img/image_not_found.jpg /app/sandbox/public/media/
+USER root
+RUN rm -rf node_modules \
+  && find . -name "*.gz" -type f -delete
 
 #
 # Package stage
