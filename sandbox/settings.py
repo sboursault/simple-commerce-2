@@ -14,6 +14,8 @@ DEBUG = env.bool('DEBUG', default=True)
 # (https://docs.djangoproject.com/en/4.1/ref/settings/#allowed-hosts)
 ALLOWED_HOSTS = ['*']
 
+CSRF_TRUSTED_ORIGINS = ['https://*.functions.fnc.fr-par.scw.cloud/']
+
 EMAIL_SUBJECT_PREFIX = '[Oscar sandbox] '
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

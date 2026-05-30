@@ -2,7 +2,7 @@
 # Build stage
 #
 FROM nikolaik/python-nodejs:python3.12-nodejs20 AS build
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED=1
 RUN groupadd -r django && useradd -r -g django django
 COPY . /app
 RUN chown -R django /app
