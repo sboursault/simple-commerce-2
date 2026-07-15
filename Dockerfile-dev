@@ -1,0 +1,26 @@
+#
+# Build stage
+#
+FROM nikolaik/python-nodejs:python3.12-nodejs20 AS build
+ENV PYTHONUNBUFFERED=1
+RUN groupadd -r django && useradd -r -g django django
+COPY . /app
+RUN chown -R django /app
+WORKDIR /app
+RUN make install
+USER django
+RUN make build_sandbox
+RUN cp --remove-destination /app/src/oscar/static/oscar/img/image_not_found.jpg /app/sandbox/public/media/
+USER root
+RUN rm -rf node_modules \
+  && find . -name "*.gz" -type f -delete
+
+#
+# Package stage
+#
+FROM python:3.12-slim
+COPY --from=build /usr/local/lib/python3.12/site-packages*/ /usr/local/lib/python3.12/site-packages/
+COPY --from=build /app/ /app/
+WORKDIR /app
+CMD ["sandbox/manage.py", "runserver", "0.0.0.0:8080"]
+# `0.0.0.0:8080` is required when running in docker
