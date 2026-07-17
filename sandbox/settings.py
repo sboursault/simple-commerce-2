@@ -385,6 +385,11 @@ INTERNAL_IPS = []  # empty list -> Django Debug Toolbar is disabled
 
 from oscar.defaults import *
 
+# override default path "images/products/%Y/%m/"
+# the year and month in the path cause issues when the database is initialized later from another docker run
+OSCAR_IMAGE_FOLDER = 'images/products/'
+
+
 # Meta
 # ====
 
